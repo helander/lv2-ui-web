@@ -187,7 +187,8 @@ static LV2UI_Handle instantiate(const LV2UI_Descriptor *descriptor,
   ui->atom_URID = ui->map->map(ui->map->handle, LV2_ATOM__URID);
   ui->atom_Path = ui->map->map(ui->map->handle, LV2_ATOM__Path);
   ui->midi_MidiEvent = ui->map->map(ui->map->handle, LV2_MIDI__MidiEvent);
-  ui->state_Changed  = ui->map->map(ui->map->handle, "http://lv2plug.in/ns/ext/state#StateChanged");
+  ui->state_Changed = ui->map->map(
+      ui->map->handle, "http://lv2plug.in/ns/ext/state#StateChanged");
 
   ui->bsynth_uiinit =
       ui->map->map(ui->map->handle, "http://gareus.org/oss/lv2/b_synth#uiinit");
@@ -209,14 +210,14 @@ static LV2UI_Handle instantiate(const LV2UI_Descriptor *descriptor,
   }
   for (int i = 0; i < 128; i++) {
     char *name = &ui->program[i][0];
-    strcpy(name,"");
+    strcpy(name, "");
   }
 
   lv2_atom_forge_init(&ui->forge, ui->map);
 
   int k = pthread_create(&ui->t_http_server, NULL, http_server_run, ui);
   if (k != 0) {
-    fprintf(stderr, "%d : %s\n", k, "pthread_create : HTTPServer thread");
+    fprintf(stderr, "%d : %s\n", k, "pthread_create : HTTPServer thread");fflush(stderr);
   }
 
   uint8_t obj_buf[400];
@@ -248,11 +249,26 @@ static void cleanup(LV2UI_Handle handle) {
   free(ui);
 }
 
-static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
-    printf("\nAn Object");fflush(stdout);
+static void sendControls(ThisUI *ui) {
+    char response[200];
+    sprintf(response, "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n\r\n{");
+    send(ui->clientSocket, response, strlen(response), 0);
+    for (PluginControl_t *control = ui->pluginControls; control->key != NULL;
+         control++) {
+      if (control == ui->pluginControls)
+        sprintf(response, "\"%s\": %d", control->key, control->value);
+      else
+        sprintf(response, ",\"%s\": %d", control->key, control->value);
+      send(ui->clientSocket, response, strlen(response), 0);
+    }
+    send(ui->clientSocket, "}", 1, 0);
+    close(ui->clientSocket);
+}
 
+
+static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
   if (obj->body.otype == ui->bsynth_controlmsg) {
-    printf("\nObject type bsynth-controlmsg");fflush(stdout);
+    fflush(stdout);
     LV2_Atom_String *keyAtom = NULL;
     LV2_Atom_Int *valueAtom = NULL;
 
@@ -267,7 +283,6 @@ static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
     if (keyAtom != NULL && valueAtom != NULL) {
       char *key = ((char *)keyAtom) + sizeof(LV2_Atom_String);
       uint8_t value = valueAtom->body;
-      printf("\nControl message key %s  value %d",key,value);fflush(stdout);
       PluginControl_t *pluginControl = getPluginControl(ui, key);
       if (pluginControl != NULL) {
         pluginControl->value = value;
@@ -283,7 +298,7 @@ static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
   }
 
   if (obj->body.otype == ui->bsynth_midipgm) {
-     printf("\nObject type bsynth-midipgm");fflush(stdout);
+    fflush(stdout);
     LV2_Atom_String *valueAtom = NULL;
     LV2_Atom_Int *keyAtom = NULL;
 
@@ -298,8 +313,7 @@ static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
     if (keyAtom != NULL && valueAtom != NULL) {
       char *value = ((char *)valueAtom) + sizeof(LV2_Atom_String);
       uint8_t key = keyAtom->body;
-      printf("\nProgram  key %d  value %s",key,value);fflush(stdout);
-      strcpy(&ui->program[key][0],value);
+      strcpy(&ui->program[key][0], value);
     } else {
       printf("\nProgram message property error");
       fflush(stdout);
@@ -308,28 +322,15 @@ static void an_object(ThisUI *ui, uint32_t port_index, LV2_Atom_Object *obj) {
   }
 
   if (obj->body.otype == ui->state_Changed) {
-     printf("\nObject type state-changed");fflush(stdout);
-        char response[200];
-        sprintf(
-                response,
-                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n");
-        send(ui->clientSocket, response, strlen(response), 0);
-        for (PluginControl_t *control = ui->pluginControls; control->key != NULL; control++) {
-            sprintf(response,"\r\n%03d %s",control->value,control->key);
-            send(ui->clientSocket, response, strlen(response), 0);
-
-        }
-        close(ui->clientSocket);
-        return;
+    sendControls(ui);
+    return;
   }
-
 }
 
 static void port_event(LV2UI_Handle handle, uint32_t port_index,
                        uint32_t buffer_size, uint32_t format,
                        const void *buffer) {
   ThisUI *ui = (ThisUI *)handle;
-  printf("\nPort Event port %d  buffer size %d format %d",port_index,buffer_size,format);fflush(stdout);
   if (!format)
     return;
 
@@ -365,9 +366,6 @@ static int ui_idle(LV2UI_Handle handle) {
   for (PluginControl_t *control = ui->pluginControls; control->key != NULL;
        control++) {
     if (control->changed) {
-      printf("\nControl %s changed %d", control->key,control->value);
-      fflush(stdout);
-
       uint8_t obj_buf[2000];
       lv2_atom_forge_set_buffer(&ui->forge, obj_buf, 2000);
 
@@ -390,30 +388,25 @@ static int ui_idle(LV2UI_Handle handle) {
     }
   }
 
-    if (ui->programChange) {
-      printf("\nChange program %03d [%s]",ui->currentProgram,&ui->program[ui->currentProgram][0]);
-      fflush(stdout);
+  if (ui->programChange) {
+    uint8_t obj_buf[2000];
+    lv2_atom_forge_set_buffer(&ui->forge, obj_buf, 2000);
 
-      uint8_t obj_buf[2000];
-      lv2_atom_forge_set_buffer(&ui->forge, obj_buf, 2000);
+    LV2_Atom_Forge_Frame frame;
+    lv2_atom_forge_frame_time(&ui->forge, 0);
 
-      LV2_Atom_Forge_Frame frame;
-      lv2_atom_forge_frame_time(&ui->forge, 0);
+    LV2_Atom *msg = (LV2_Atom *)lv2_atom_forge_object(&ui->forge, &frame, 0,
+                                                      ui->bsynth_midipgm);
+    lv2_atom_forge_property_head(&ui->forge, ui->bsynth_controlkey, 0);
+    lv2_atom_forge_int(&ui->forge, ui->currentProgram);
 
-      LV2_Atom *msg = (LV2_Atom *)lv2_atom_forge_object(&ui->forge, &frame, 0,
-                                                        ui->bsynth_midipgm);
-      lv2_atom_forge_property_head(&ui->forge, ui->bsynth_controlkey, 0);
-      lv2_atom_forge_int(&ui->forge, ui->currentProgram);
+    lv2_atom_forge_pop(&ui->forge, &frame);
 
-      lv2_atom_forge_pop(&ui->forge, &frame);
+    ui->write(ui->controller, 0, lv2_atom_total_size(msg),
+              ui->atom_eventTransfer, msg);
 
-      ui->write(ui->controller, 0, lv2_atom_total_size(msg),
-                ui->atom_eventTransfer, msg);
-
-      ui->programChange = false;
-    }
-
-
+    ui->programChange = false;
+  }
 
   return 0;
 }
@@ -446,8 +439,6 @@ static void handleSignal(int signal) {}
 
 #define MTU_SIZE 1500
 static void send_file_to_socket(char *filepath, int socket) {
-  printf("\nSending file %s", filepath);
-  fflush(stdout);
   FILE *file = fopen(filepath, "rb");
   if (file == NULL) {
     char *stat404 = "HTTP/1.1 404 Not Found\r\n\r\n";
@@ -500,6 +491,8 @@ static void *http_server_run(void *inst) {
   while (1) {
     ui->request = (char *)malloc(SIZE * sizeof(char));
     char method[10], route[100];
+    char resource_string[50];
+    unsigned int resource_uint;
 
     ui->clientSocket = accept(ui->serverSocket, NULL, NULL);
     read(ui->clientSocket, ui->request, SIZE);
@@ -507,116 +500,72 @@ static void *http_server_run(void *inst) {
     sscanf(ui->request, "%s %s", method, route);
 
     free(ui->request);
-    printf("\nMethod %s  Path %s\n", method, route);
-    fflush(stdout);
 
     if (strcmp(method, "GET") != 0) {
       const char response[] =
           "HTTP/1.1 400 Bad Request\r\nAccess-Control-Allow-Origin: *\r\n\r\n";
       send(ui->clientSocket, response, strlen(response), 0);
-    } else {
+      continue;
+    }
 
-      char *token;
-
-      token = strtok(route, "/");
-      if (token == NULL) {
-        char filepath[200];
-        sprintf(filepath, "%s/%s", ui->static_path, "index.html");
-        send_file_to_socket(filepath, ui->clientSocket);
-        close(ui->clientSocket);
-      } else if (strcmp(token, "control") == 0) {
-        char *sKey = NULL;
-        token = strtok(NULL, "/");
-        if (token != NULL) {
-          sKey = token;
-          token = strtok(NULL, "/");
-        }
-        if (sKey != NULL) {
-          char *sValue = NULL;
-          // token = strtok(NULL, "/");
-          if (token != NULL) {
-            sValue = token;
-            token = strtok(NULL, "/");
-          }
-          printf("\nParsed  control key %s  value %s", sKey, sValue);
-          fflush(stdout);
-          PluginControl_t *pluginControl = getPluginControl(ui, sKey);
-          if (pluginControl != NULL) {
-            if (sValue != NULL) {
-              pluginControl->value = atoi(sValue);
-              pluginControl->changed = true;
-            }
-            char response[200];
-            sprintf(
-                response,
+    if (sscanf(route, "/control/%u/%s", &resource_uint, resource_string) == 2) {
+      PluginControl_t *pluginControl = getPluginControl(ui, resource_string);
+      if (pluginControl != NULL) {
+        pluginControl->value = resource_uint;
+        pluginControl->changed = true;
+        char response[200];
+        sprintf(response,
                 "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n%d",
                 pluginControl->value);
-            send(ui->clientSocket, response, strlen(response), 0);
-          } else {
-            char *stat404 = "HTTP/1.1 404 Not Found\r\n\r\n";
-            send(ui->clientSocket, stat404, strlen(stat404), 0);
-          }
-        } else {
-          char *stat404 = "HTTP/1.1 404 Not Found\r\n\r\n";
-          send(ui->clientSocket, stat404, strlen(stat404), 0);
-        }
-        close(ui->clientSocket);
-      } else if (strcmp(token, "controls") == 0) {
-        char response[200];
-        sprintf(
-                response,
-                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n");
         send(ui->clientSocket, response, strlen(response), 0);
-        for (PluginControl_t *control = ui->pluginControls; control->key != NULL; control++) {
-            sprintf(response,"\r\n%03d %s",control->value,control->key);
-            send(ui->clientSocket, response, strlen(response), 0);
-
-        }
-        close(ui->clientSocket);
-      } else if (strcmp(token, "program") == 0) {
-        char *sKey = strtok(NULL, "/");
-        if (sKey != NULL) {
-          printf("\nParsed  program %s ", sKey);
-          fflush(stdout);
-          ui->currentProgram = atoi(sKey);
-          ui->programChange = true;
-          // As of now the code below is replaced with code in port_event (state changed) that sends controls response
-          //char response[100];
-          //sprintf(
-          //      response,
-          //      "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n%d",
-          //      ui->currentProgram);
-          //send(ui->clientSocket, response, strlen(response), 0);
-        } else {
-            char response[100];
-            sprintf(
-                response,
-                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n\r\n%d",
-                ui->currentProgram);
-            send(ui->clientSocket, response, strlen(response), 0);
-            close(ui->clientSocket);
-        }
-      } else if (strcmp(token, "programs") == 0) {
-        char response[200];
-        sprintf(
-                response,
-                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\n");
-        send(ui->clientSocket, response, strlen(response), 0);
-        for (int i = 0; i < 128; i++) {
-            sprintf(response,"\r\n%03d %s",i,&ui->program[i][0]);
-            send(ui->clientSocket, response, strlen(response), 0);
-
-        }
-        close(ui->clientSocket);
       } else {
-        char filepath[200];
-        sprintf(filepath, "%s/%s", ui->static_path, &route[1]);
-        send_file_to_socket(filepath, ui->clientSocket);
-        close(ui->clientSocket);
+        char *stat404 = "HTTP/1.1 404 Not Found\r\n\r\n";
+        send(ui->clientSocket, stat404, strlen(stat404), 0);
       }
+      close(ui->clientSocket);
+      continue;
     }
-//    close(ui->clientSocket);
-    printf("\n");
+
+    if (!strcmp(route, "/controls")) {
+      sendControls(ui);
+      continue;
+    }
+
+    if (sscanf(route, "/program/%u", &resource_uint) == 1) {
+      ui->currentProgram = resource_uint;
+      ui->programChange = true;
+      // Response is sent from port_event when all changes have been applied
+      continue;
+    }
+
+    if (!strcmp(route, "/programs")) {
+      char response[200];
+      sprintf(response,
+              "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\n\r\n{");
+      send(ui->clientSocket, response, strlen(response), 0);
+      for (int i = 0; i < 128; i++) {
+        if (i == 0)
+           sprintf(response, "\"%d\": \"%s\"", i, &ui->program[i][0]);
+        else {
+           if (strlen(&ui->program[i][0]) > 0)
+             sprintf(response, ",\"%d\": \"%s\"", i, &ui->program[i][0]);
+           else
+             strcpy(response,"");
+        }
+        send(ui->clientSocket, response, strlen(response), 0);
+      }
+      send(ui->clientSocket, "}", 1, 0);
+      close(ui->clientSocket);
+      continue;
+    }
+
+    if (!strcmp(route, "/"))
+      strcat(route, "index.html");
+
+    char filepath[200];
+    sprintf(filepath, "%s/%s", ui->static_path, &route[1]);
+    send_file_to_socket(filepath, ui->clientSocket);
+    close(ui->clientSocket);
   }
   return NULL;
 }

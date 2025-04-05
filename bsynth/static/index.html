@@ -2,5 +2,382 @@
 <head>
 </head>
 <body>
+     <select id="program.selector">Programs</select>
+
+     <form id="overdrive.enable" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Overdrive enable</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="127" />
+           </div>
+        </div>
+      </form>
+
+     <form id="overdrive.character" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Overdrive character</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="percussion.enable" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Percussion enable</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="127" />
+           </div>
+        </div>
+      </form>
+
+     <form id="percussion.volume" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Percussion volume</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="percussion.decay" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Percussion decay</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="percussion.harmonic" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Percussion harmonic</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="rotary.speed-select" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Rotary speed select</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="swellpedal1" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Swell pedal 1</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="vibrato.knob" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Vibrato knob</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="vibrato.routing" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Vibrato routing</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="vibrato.upper" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Vibrato upper</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="vibrato.lower" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Vibrato lower</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="reverb.mix" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Reverb mix</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar1" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 1</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar113" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 113</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar135" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 135</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar16" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 16</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar2" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 2</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar223" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 223</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar4" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 4</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar513" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 513</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="upper.drawbar8" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Upper drawbar 8</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar1" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 1</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar113" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 113</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar135" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 135</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar16" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 16</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar2" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 2</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar223" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 223</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar4" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 4</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar513" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 513</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="lower.drawbar8" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Lower drawbar 8</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="pedal.drawbar8" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Pedal drawbar 8</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+     <form id="pedal.drawbar16" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Pedal drawbar 16</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="0" max="127" step="1" />
+           </div>
+        </div>
+      </form>
+
+   <script type="module">
+
+      const controls = await (await fetch("/controls")).json();
+      for (let key in controls) {
+        let control = document.getElementById(key);
+        if (control != null) {
+          let oput = control.querySelector("output[name='oput']");
+          oput.innerHTML = controls[key];
+          let slider = control.querySelector("input");
+          slider.value = controls[key];
+          slider.oninput = async function () {
+                    await fetch(`/control/${this.value}/${key}`);
+          };
+        }
+      }
+
+      const programs = await (await fetch("/programs")).json();
+      const programSelector = document.getElementById("program.selector");
+      programSelector.length = 0;
+      const none = document.createElement("option");
+      none.text = "--------------";
+      none.value = "none";
+      programSelector.add(none);
+      for (let program in programs) {
+         const option = document.createElement("option");
+         option.text = programs[program];
+         option.value = program;
+         programSelector.add(option);
+      }
+      programSelector.addEventListener("change", async (event) => {
+         const selectedProgram = event.target.value;
+         if (selectedProgram == "none") return;
+         const controls = await (await fetch("/program/"+selectedProgram)).json();
+         for (let key in controls) {
+            let control = document.getElementById(key);
+            if (control != null) {
+               let oput = control.querySelector("output[name='oput']");
+               oput.innerHTML = controls[key];
+               let slider = control.querySelector("input");
+               slider.value = controls[key];
+            }
+         }
+      });
+
+   </script>
 </body>
 </html>
