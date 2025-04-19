@@ -1,0 +1,32 @@
+<html>
+<head>
+</head>
+<body>
+
+     <form id="level" oninput="oput.value=slider.value">
+        <div style="display: flex;">
+           <output style="width: 10em;text-align: left">Level</output>
+           <output for="slider" name="oput" style="width: 7em;padding-right: 1em;text-align: right;">0</output>
+           <div style="flex-grow: 1;">
+              <input type="range" id="slider"  style="width: 50%;accent-color: green;" value="0" min="-80" max="20" step="0.1" />
+           </div>
+        </div>
+      </form>
+
+
+   <script type="module">
+
+        let control = document.getElementById("level");
+        if (control != null) {
+          let oput = control.querySelector("output[name='oput']");
+          let slider = control.querySelector("input");
+          oput.innerHTML = slider.value;
+          slider.oninput = async function () {
+                    await fetch(`/level/${this.value}`);
+          };
+        }
+
+
+   </script>
+</body>
+</html>
